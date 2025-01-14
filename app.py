@@ -1,16 +1,15 @@
 import gradio as gr
+import os
 from huggingface_hub import InferenceClient
 
-client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
+# Hugging Face API anahtarını Vercel ortam değişkenlerinden alın
+api_key = os.environ.get("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")
 
-def respond(
-    message,
-    history: list[tuple[str, str]],
-    system_message,
-    max_tokens,
-    temperature,
-    top_p,
-):
+# Hugging Face modeline bağlantı kurun
+client = InferenceClient("HuggingFaceH4/zephyr-7b-beta", token=api_key)
+
+def respond(message, history: list[tuple[str, str]], system_message, max_tokens, temperature, top_p):
+    # Mesajları hazırlayın
     messages = [{"role": "system", "content": system_message}]
     for val in history:
         if val[0]:
@@ -19,6 +18,7 @@ def respond(
             messages.append({"role": "assistant", "content": val[1]})
     messages.append({"role": "user", "content": message})
 
+    # Modelden gelen yanıtı alın
     response = ""
     for message in client.chat_completion(
         messages,
@@ -31,6 +31,7 @@ def respond(
         response += token
         yield response
 
+# Gradio arayüzü
 demo = gr.ChatInterface(
     respond,
     additional_inputs=[
