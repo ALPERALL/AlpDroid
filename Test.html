@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlpDroid AI Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6B46C1;
+            --secondary: #9F7AEA;
+            --accent: #B794F4;
+            --bg-light: #ffffff;
+            --bg-dark: #1a1a1a;
+            --text-light: #2D3748;
+            --text-dark: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 1s ease 2s forwards;
+        }
+
+        .splash-content {
+            text-align: center;
+            color: white;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: white;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Main Content */
+        .main-container {
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .content-area {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            height: calc(100vh - 140px);
+            transition: all 0.3s ease;
+        }
+
+        .content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                flex-direction: column;
+                padding: 20px;
+                gap: 10px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .content-area {
+                height: calc(100vh - 180px);
+            }
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen">
+        <div class="splash-content">
+            <img src="https://raw.githubusercontent.com/ALPERALL/AlpDroid/refs/heads/main/Photoroom-20250308_203609.png" alt="AlpDroid Logo" class="splash-logo">
+            <h1>Welcome to AlpDroid</h1>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-robot"></i>
+                AlpDroid AI
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link" data-section="chat">
+                    <i class="fas fa-comments"></i> Sohbet
+                </a>
+                <a href="#" class="nav-link" data-section="image">
+                    <i class="fas fa-image"></i> Fotoğraf
+                </a>
+                <a href="#" class="nav-link" data-section="audio">
+                    <i class="fas fa-music"></i> Ses
+                </a>
+                <a href="#" class="nav-link" data-section="video">
+                    <i class="fas fa-video"></i> Video
+                </a>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="content-area">
+            <iframe id="contentFrame" class="content-frame" src="https://alperall-alpdroid.hf.space/"></iframe>
+        </div>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            themeToggle.innerHTML = body.classList.contains('dark') ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Navigation
+        const sections = {
+            chat: 'https://alperall-alpdroid.hf.space/',
+            image: 'IMAGE_GENERATION_URL',
+            audio: 'AUDIO_GENERATION_URL',
+            video: 'VIDEO_GENERATION_URL'
+        };
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.closest('.nav-link').dataset.section;
+                document.getElementById('contentFrame').src = sections[section];
+                
+                // Close mobile menu if open
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Remove splash screen after animation
+        setTimeout(() => {
+            document.querySelector('.splash-screen').style.display = 'none';
+        }, 3000);
+    </script>
+</body>
+</html>
+
